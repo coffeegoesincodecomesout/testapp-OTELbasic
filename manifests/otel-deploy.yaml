@@ -1,0 +1,40 @@
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns1 
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-example-deployment
+  namespace: ns1
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: otel-example
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  serviceAccount: otel-collector-deployment
+  template:
+    metadata:
+      labels:
+        app: otel-example
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
+    spec:
+      containers:
+      - name: otel-example
+        image: quay.io/rhn_support_nigsmith/testapp-otel-ping:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8090
