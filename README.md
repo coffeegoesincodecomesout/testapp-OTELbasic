@@ -22,8 +22,8 @@ $ oc apply -f otel-collector.yaml
 4. scale the testapp down and back up, inorder to deploy the sidecar
 
 ```
-$ oc scale --replica=0 otel-example-deployment
-$ oc scale --replica=1 otel-example-deployment
+$ oc scale --replicas=0 deployment/otel-example-deployment
+$ oc scale --replicas=1 deployment/otel-example-deployment
 ```
 
 5. call the endpoint and view the trace
